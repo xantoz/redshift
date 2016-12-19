@@ -27,6 +27,7 @@ EXTRA_redshift_SOURCES = \
 	gamma-vidmode.c gamma-vidmode.h \
 	gamma-quartz.c gamma-quartz.h \
 	gamma-w32gdi.c gamma-w32gdi.h \
+	gamma-coopgamma.c gamma-coopgamma.h \
 	location-geoclue2.c location-geoclue2.h \
 	location-corelocation.m location-corelocation.h \
 	windows/appicon.rc \
@@ -69,6 +70,11 @@ endif
 if ENABLE_WINGDI
 redshift_SOURCES += gamma-w32gdi.c gamma-w32gdi.h
 redshift_LDADD += -lgdi32
+endif
+
+if ENABLE_COOPGAMMA
+redshift_SOURCES += gamma-coopgamma.c gamma-coopgamma.h
+redshift_LDADD += -lcoopgamma
 endif
 
 

@@ -62,7 +62,7 @@ quartz_init(quartz_state_t **state)
 }
 
 static int
-quartz_start(quartz_state_t *state)
+quartz_start(quartz_state_t *state, program_mode_t mode)
 {
 	CGError error;
 	uint32_t display_count;
@@ -221,7 +221,7 @@ quartz_set_temperature_for_display(
 	}
 
 	colorramp_fill_float(gamma_r, gamma_g, gamma_b, ramp_size,
-			     setting);
+			     ramp_size, ramp_size, setting);
 
 	CGError error =
 		CGSetDisplayTransferByTable(display, ramp_size,

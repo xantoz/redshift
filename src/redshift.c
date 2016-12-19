@@ -74,6 +74,10 @@ int poll(struct pollfd *fds, int nfds, int timeout) { abort(); return -1; }
 
 #include "gamma-dummy.h"
 
+#ifdef ENABLE_COOPGAMMA
+# include "gamma-coopgamma.h"
+#endif
+
 #ifdef ENABLE_DRM
 # include "gamma-drm.h"
 #endif
@@ -406,8 +410,9 @@ provider_try_start(const location_provider_t *provider,
 }
 
 static int
-method_try_start(const gamma_method_t *method,
-		 gamma_state_t **state, config_ini_state_t *config, char *args)
+method_try_start(const gamma_method_t *method, gamma_state_t **state,
+		 program_mode_t mode, config_ini_state_t *config,
+		 char *args)
 {
 	int r;
 
@@ -472,7 +477,7 @@ method_try_start(const gamma_method_t *method,
 	}
 
 	/* Start method. */
-	r = method->start(*state);
+	r = method->start(*state, mode);
 	if (r < 0) {
 		method->free(*state);
 		fprintf(stderr, _("Failed to start adjustment method %s.\n"),
@@ -902,6 +907,9 @@ main(int argc, char *argv[])
 
 	/* List of gamma methods. */
 	const gamma_method_t gamma_methods[] = {
+#ifdef ENABLE_COOPGAMMA
+		coopgamma_gamma_method,
+#endif
 #ifdef ENABLE_DRM
 		drm_gamma_method,
 #endif
@@ -1125,7 +1133,7 @@ main(int argc, char *argv[])
 		if (options.method != NULL) {
 			/* Use method specified on command line. */
 			r = method_try_start(
-				options.method, &method_state, &config_state,
+				options.method, &method_state, options.mode, &config_state,
 				options.method_args);
 			if (r < 0) exit(EXIT_FAILURE);
 		} else {
@@ -1135,7 +1143,7 @@ main(int argc, char *argv[])
 				if (!m->autostart) continue;
 
 				r = method_try_start(
-					m, &method_state, &config_state, NULL);
+					m, &method_state, options.mode, &config_state, NULL);
 				if (r < 0) {
 					fputs(_("Trying next method...\n"), stderr);
 					continue;

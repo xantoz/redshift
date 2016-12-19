@@ -82,7 +82,7 @@ typedef struct {
 typedef struct gamma_state gamma_state_t;
 
 typedef int gamma_method_init_func(gamma_state_t **state);
-typedef int gamma_method_start_func(gamma_state_t *state);
+typedef int gamma_method_start_func(gamma_state_t *state, program_mode_t mode);
 typedef void gamma_method_free_func(gamma_state_t *state);
 typedef void gamma_method_print_help_func(FILE *f);
 typedef int gamma_method_set_option_func(gamma_state_t *state, const char *key,

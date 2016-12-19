@@ -62,7 +62,7 @@ w32gdi_init(w32gdi_state_t **state)
 }
 
 static int
-w32gdi_start(w32gdi_state_t *state)
+w32gdi_start(w32gdi_state_t *state, program_mode_t mode)
 {
 	BOOL r;
 
@@ -200,8 +200,8 @@ w32gdi_set_temperature(
 		}
 	}
 
-	colorramp_fill(gamma_r, gamma_g, gamma_b, GAMMA_RAMP_SIZE,
-		       setting);
+	colorramp_fill_u16(gamma_r, gamma_g, gamma_b, GAMMA_RAMP_SIZE,
+			   GAMMA_RAMP_SIZE, GAMMA_RAMP_SIZE, setting);
 
 	/* Set new gamma ramps */
 	r = FALSE;
